@@ -8,8 +8,10 @@ import { UsersModule } from './users/users.module';
 import { WalletModule } from './wallet/wallet.module';
 import { MpesaModule } from './mpesa/mpesa.module';
 import { SavingsPotsModule } from './savings-pots/savings-pots.module';
+import { AppController } from './app.controller';
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
