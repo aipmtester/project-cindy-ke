@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Change this to your server IP when testing on a physical device
   static const String baseUrl = 'http://localhost:3000/api';
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<String?> get token async => await _storage.read(key: 'auth_token');
+  Future<String?> get token async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token');
+  }
 
   Future<Map<String, String>> get _headers async {
     final t = await token;
@@ -18,11 +20,13 @@ class ApiService {
   }
 
   Future<void> saveToken(String token) async {
-    await _storage.write(key: 'auth_token', value: token);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
   }
 
   Future<void> clearToken() async {
-    await _storage.delete(key: 'auth_token');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
   }
 
   Future<Map<String, dynamic>> _handleResponse(http.Response response) async {
